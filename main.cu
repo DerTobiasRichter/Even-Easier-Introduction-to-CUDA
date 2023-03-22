@@ -11,11 +11,14 @@ __global__ void add(int n, float *x, float *y)
 
 int main(void)
 {
-    int N = 1<<20; // 1M elements
+    // shift int 1: 0000 0000 0000 0000 0000 0001, 20 times left to: 0001 0000 0000 0000 0000 0000,
+    // what makes int N = 1.048.576
+    int N = 1<<20;
 
-    float *x;
-    float *y;
+    //reservation of pointer address space for x and y
+    float *x, *y;
 
+    //allocate managed space in graphic card RAM, of size float - for your system and times of N elements
     cudaMallocManaged(&x, N*sizeof(float));
     cudaMallocManaged(&y, N*sizeof(float));
 
@@ -25,7 +28,7 @@ int main(void)
         y[i] = 2.0f;
     }
 
-    // Run kernel on 1M elements on the GPU
+    // Run kernel on 1.048.576 elements on the GPU
     int blockSize = 256;
     int numBlocks = (N + blockSize - 1) / blockSize;
     add<<<numBlocks, blockSize>>>(N, x, y);
