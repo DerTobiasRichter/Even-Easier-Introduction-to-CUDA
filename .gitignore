@@ -1,0 +1,4 @@
+## cMake Exclude
+cmake-build-debug/**
+## cLion Exclude
+.idea/**
